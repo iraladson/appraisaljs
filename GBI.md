@@ -1,30 +1,32 @@
 ##Goals/Desires/Beliefs/Intentions
 
+Intentions need work
+
 ```json
 {
 	"goals" : [{
-		"object" : "Lemma String" || obj reference,
+		"object" : "RefString",
 		
 		"descrip" : {
-			"type" : integer, // -1, 0 ,or 1 => decrease, maintain, increase
+			"type" : 0,
 			
 			"prop" : "propString"
 		},
 		
-		"magnitude" : float // -1 to 1
+		"magnitude" : 0.0
 					
 	}],
 	
 	"desires" : [{
-		"object" : "Lemma String" || obj reference,
+		"object" : "RefString",
 		
 		"descrip" : {
-			"type" : integer, // -1, 0 ,or 1 => decrease, maintain, increase
+			"type" : 0,
 			
 			"prop" : "propString"
 		},
 		
-		"magnitude" : float // -1 to 1
+		"magnitude" : 0.0
 					
 	}],
 	
@@ -34,9 +36,9 @@
 			
 			"assertion" : "Lemma String",
 			
-			"sentiment" : float, // -1 to 1
+			"sentiment" : 0.0,
 			
-			"magnitude" : float // -1 to 1
+			"magnitude" : 0.0
 		}],
 		
 		"aboutOther" : [{
@@ -44,9 +46,9 @@
 			
 			"assertion" : "Lemma String",
 			
-			"sentiment" : float, // -1 to 1
+			"sentiment" : 0.0
 			
-			"magnitude" : float // -1 to 1
+			"magnitude" : 0.0
 		}],
 		
 		"aboutConversation : [{
@@ -56,21 +58,21 @@
 			
 			"assertion" : "Lemma String",
 			
-			"affirmative" : boolean,
+			"affirmative" : true,
 			
-			"magnitude" : float // -1 to 1
+			"magnitude" : 0.0,
 			
-			"sentiment" : float, // -1 to 1
+			"sentiment" : 0.0
 			
 		}]
 	},
 	
-	"intentions" : [{ //NEEDS WORK
+	"intentions" : [{
 		"object" : "Lemma String",
 		
 		"relation" : "POS String",
 		
-		"sentiment" : float // -1 to 1
+		"sentiment" : 0.0
 	}]
 }
 ```
