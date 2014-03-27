@@ -51,7 +51,7 @@ Intentions need work
 			"magnitude" : 0.0
 		}],
 		
-		"aboutConversation : [{
+		"aboutConversation" : [{
 			"subject" : "Lemma String",
 			
 			"relation" : "POS String",
