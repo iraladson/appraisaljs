@@ -28,11 +28,12 @@ function DBI(DBIjson){
 
 		desires.push({
 			object : obj,
-			value : val,		
+			value : val,
+			last : val,		
 			preference : pref,			
 			persistant : false,		
 			magnitude : 0.2, 		
-			id : "0",	
+			id : id,	
 		});
 
 		return that;		
@@ -107,11 +108,46 @@ function DBI(DBIjson){
 		for(var i = 0; i < potentialDesires.length; i+=1){
 			var desire = potentialDesires[i];
 			if(checkFunction(desire)){
-				desire.dbi = config;
-				this.newDesire(desire.dbi);
+				if(config.object == "_SELF"){
+					config.object = desire;
+					this.newDesire(config);
+					config.object = "_SELF";
+
+				} else {
+					this.newDesire(config);
+				}
 			}
 		}
+	}	
+
+	this.getDesires = function(){
+		return desires;
 	}
 }
+
+var dbison = {
+	"desires" : [],
 	
+	"beliefs" : {
+		"aboutSelf" : [],
+		
+		"aboutOther" : [],
+		
+		"general" : []
+	},
+	
+	"intentions" : []
+}
+	
+var person = { name : "Bob", age : 24};
+var person1 = { name : "Richard", age : 56};
+var person2 = { name : "Karen", age : 40};
+
+function isOldEnough(person){
+	if(person.age > 30)
+		return true
+}
+
+
+
 
