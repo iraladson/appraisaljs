@@ -1,6 +1,8 @@
 function DBI(DBIjson){
 	var that = this;
 
+	var scopeOfDesire = window;
+
 	var desires = DBIjson["desires"];
 
 	var beliefs = DBIjson["beliefs"];
@@ -14,11 +16,16 @@ function DBI(DBIjson){
 		var val = config.value;
 
 		if(!obj){
-			console.log("error->desire must have specified object(string)");
+			console.log("error->desire must have specified object(object)");
 			return;
 		} else if(!val){
 			console.log("error->desire must have specified value(string)");				
 			return;
+		}
+
+		if(typeof obj == "string"){
+			console.log("string");
+			obj = scopeOfDesire[obj];
 		}
 
 		var pref = config.preference || 1,
@@ -28,11 +35,12 @@ function DBI(DBIjson){
 
 		desires.push({
 			object : obj,
-			value : val,		
+			value : val,
+			last : obj[val],		
 			preference : pref,			
 			persistant : false,		
 			magnitude : 0.2, 		
-			id : "0",	
+			id : id,	
 		});
 
 		return that;		
@@ -107,11 +115,19 @@ function DBI(DBIjson){
 		for(var i = 0; i < potentialDesires.length; i+=1){
 			var desire = potentialDesires[i];
 			if(checkFunction(desire)){
-				desire.dbi = config;
-				this.newDesire(desire.dbi);
+				if(config.object = "_SELF"){
+					config.object = desire;
+				}
+				this.newDesire(config);
 			}
 		}
+	}	
+
+	this.getDesires = function(){
+		return desires;
+	}
+
+	this.changeDesireScope = function(scope){
+		scopeOfDesire = scope;
 	}
 }
-	
-
