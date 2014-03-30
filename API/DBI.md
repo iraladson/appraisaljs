@@ -1,7 +1,5 @@
 ##Desires/Beliefs/Intentions
 
-Intentions need work
-
 ```json
 {
 	"desires" : [{
@@ -90,131 +88,71 @@ specified preference.
 
 ```object``` is a string reference to the object that contains the value to be measure.
 
-```value```  is a string reference to the property of value that will be used to determine 
-the success or failure of a goal. It should be a number.
+```value```  is a string reference to the property or method that will return the value. This value will 
+be used to determine the success or failure of a goal. The return type of the property/method must be a
+number.
 
 ```preference``` is an integer between -1 and 1. If set to 1, that means the agent desires the value 
 specified by ```property``` to increase. If set to -1, that means the agent desires the value 
 to decrease. If set to 0, then the agent desires that value be maintained.
 
-```persistant``` is a boolean that determines if all instances contain this desire.
-
-Adding new desires to the DBI object is pretty simple:
-```DBI.newGoal(object,value,type,magnitude);```
+```persistant``` is a boolean that determines if the desire can be modified.
 
 
-####Potential populating function
-New desires can be created by satisfying a straight-forward ```if statement```
+Desires are stored as objects inside an array. There are three functions that allow the ```desires``` array 
+to be modified.
+
 ```javascript
-	var potentialDesire 
-	
-	if( isGood(potentialDesire) && canHave(potentialDesire) ){
-		DBI.newGoal(object , "wordString" , 1 , 0);	
-	}
-	
-	if( isBad(potentialDesire) ){
-		DBI.newGoal(object, "wordString", -1 , 0);
-	}
-	
-	function isGood(pDesire){
-		if(pDesire.sentiment > 0.5 ||
-			(function(){
-				for(var i = 0; i > beliefs.general.length; i+=1){
-					var beleif = beliefs.general[i];
-					if((belief.assertion == "good") && 
-						(belief.magnitude > 0.5) && 
-						(belief.subject == pDesire.string)){
-						return true;
-					}
-				}
-			})() )	
-	}
-	
-	function isBad(pDesire){
-		if(pDesire.sentiment < -0.5 ||
-			(function(){
-				for(var i = 0; i > beliefs.general.length; i+=1){
-					var beleif = beliefs.general[i];
-					if((belief.assertion == "bad") && 
-						(belief.magnitude > 0.5) && 
-						(belief.subject == pDesire.string)){
-						return true;
-					}
-				}
-			})() )			
-	}	
-	
-	function canHave(pDesire){
-		var verbs = pDesire.synonyms;
-		var typeOf = pDesire.typeOf;
-		var synonyms = pDesire.synonyms;
-		
-		function verbCheck(a){
-			for(var i = 0; i > verbs.length; i+=1){
-				for(var j = 0; j > beliefs.aboutSelf.length; j+=1){
-					if(belief.verb == verbs[i] && belief.assertion == a.string){
-						return true;
-					}
-				}
-			}
-		}
-		
-		if(verbCheck(pDesire))
+	var model = new emoChatter.DBI(DBIjson);
+
+	model.newDesire({		//method 1
+		object : "string",		//@default: "error->desire must have specified object(string)"
+		value : "string",		//@default: "error->desire must have specified value(string)""
+		preference : 1,			//@default: 1
+		persistant : false,		//@default: false
+		magnitude : 0.2 		//@default: 0.2
+		id : "0",				//@default: automatic increment "0","1"..."x"
+	}); 
+
+	model.removeDesire({	//method 2
+		id : 0,				//Removes desires from the array that match specified params
+		object : "string,
+		value : "string,
+		preference : 0,
+		persistant : true,
+		magnitude : 0.0
+	}); 
+
+	model.updateDesires(potentialDesires,config,checkFunction); //method 3
+```
+METHOD 3
+========
+This function can be called everytime the agent's relationship to it's environment
+changes. In the case of a chatbot, for instance, this moment would be after every update
+in the chatlog.
+
+The function looks at each object in the ```potentialDesires``` array and uses the ```checkFunction``` to
+see if it should be a new desire. If ```checkFunction(potentialDesires[i])``` returns a truthy value, then
+```PotentialDesires[i]``` is pushed into the ```desires``` array. 
+
+```config``` is an object that specifies the properites of the new desires.
+
+As an example, say you wanted a chatbot to "desire" words that have a positive sentiment.
+```javascript
+	//grab potentialDesires
+	var wordbank = object.getWordbank(); //an array of words {string : "word", sentiment : 0.0 }
+
+	//define checkFunction
+	function isGood(word){
+		if(word.sentiment > 0.6)
 			return true;
-			
-		for(var i = 0; i > typeOf.length; i+=1){
-			var type = typeOf[i];
-			
-			if(verbCheck(type))
-				return true;
-		}
-		
-		for(var i = 0; i > synonyms.length; i+=1){
-			var word = synonyms[i];
-			
-			if(verbCheck(word))
-				return true;
-		}
-		
-		return false
 	}
-	
+
+	//automatically updates desires with words that have a high sentiment
+	model.updateDesires(wordbank,{ object : wordbank, value : "timeUttered" },isGood); 
 ```
 
 
-
-
-```javascript
-{
-		"object" : "self",
-	
-		"value" : "numOfWords",
-				
-		"type" : 1,
-	
-		"magnitude" : 1
-					
-}	
-```
-
-Simple.
-
-
-Desires refer to short-term aims that are based on current beliefs. They are modified when
-the agent's beliefs are changed. Every cycle, the model evaluates its belief structure and 
-modifies desires accordingly. This occurs through a series of outline steps.
-
-1. Gather relevant notions => one's that relate to self
-
-2. See if any general beliefs 
-
-3. If the assertion implies the notion is positive
-
-4.
-
-```javascript
-
-```
 
 Beliefs are assertions based on the current conversation.
 ```javascript
