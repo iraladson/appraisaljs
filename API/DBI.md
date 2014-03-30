@@ -1,4 +1,4 @@
-##Desires/Beliefs/Intentions
+#Desires/Beliefs/Intentions
 
 ```json
 {	
@@ -76,13 +76,13 @@ specified preference.
 				
 }
 ```
-#Properties
+###Properties
 
 ```id``` is an integer that represents when it was pushed into the desires array. Automatically
 incremented.
 
 ```object``` is a string reference to the object that contains the value to be measure. By 
-default, the object is aquired from the global scope like so: ```window["refString"]```. 
+default, the object is aquired from the global scope like so: ```currentScope["refString"]```. 
 
 ```value```  is a string reference to the property or method that will return the value. This value will  be used to determine the success or failure of a goal. The return type of the property/method must be a number.
 
@@ -95,7 +95,7 @@ to decrease. If set to 0, then the agent desires that value be maintained.
 
 ```mutable``` is a boolean that determines if the desire can be modified.
 
-#Functions
+###Functions
 
 Desires are stored as objects inside an array called ```desires```. There are three functions 
 that allow the ```desires``` array to be modified.
