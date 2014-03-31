@@ -95,6 +95,8 @@ to decrease. If set to 0, then the agent desires that value be maintained.
 
 ```mutable``` is a boolean that determines if the desire can be modified.
 
+```magnitude``` is a float between 0 and 1 and represents the intensity of the desire.
+
 ###Functions
 
 Desires are stored as objects inside an array called ```desires```. There are three functions 
@@ -103,6 +105,8 @@ that allow the ```desires``` array to be modified.
 ```javascript
 	var model = new emotionalAppraisal.DBI(DBIjson);
 
+	//FUNCTION 1
+	//
 	model.newDesire({	
 		object : "string",		//string or object
 		value : "string",		//@default: "error->desire must have specified value(string)""
@@ -112,8 +116,9 @@ that allow the ```desires``` array to be modified.
 	}); 
 
 	
-
-	model.removeDesire({	//function 2
+	//FUNCTION 2
+	//
+	model.removeDesire({	
 		id : 0,				//Removes desires from the array that match specified params
 		object : "string,
 		value : "string,
@@ -122,16 +127,21 @@ that allow the ```desires``` array to be modified.
 		magnitude : 0.0
 	}); 
 
-	model.updateDesires(potentialDesires,config,checkFunction); //function 3
+	//FUNCTION 3
+	//
+	model.updateDesires(potentialDesires,config,checkFunction);
+
 ```
+#####Notes on FUNCTION 3
+
 ```updateDesires``` should be called every time the agent's relationship to it's environment
 changes. For example, in the case of a chatbot, this would be called after the chatlog changes.
-1.```potentialDesires``` is an array of objects that represent all of the object that could potentially become new desires. The construction of this array is left to the user.
 
-2.```config``` is an object that represents configuration details. It is just like the parameter of ```newDesire```, except if ```object``` is set to the string ```"_SELF"``` the object property will automatically be set to ```potentialDesires[i]```. 
+1. ```potentialDesires``` is an array of objects that represent all of the object that could potentially become new desires. The construction of this array is left to the user.
+
+2. ```config``` is an object that represents configuration details. It is just like the parameter of ```newDesire```, except if ```object``` is set to the string ```"_SELF"``` the object property will automatically be set to ```potentialDesires[i]```. 
 
 3. ```checkFunction``` will take each ```potentialDesires[i]``` as a parameter and return a boolean value. If true, then the desire will get pushed into the ```desires``` array.
-
 
 
 As an example, say you wanted a chatbot to "desire" words that have a positive sentiment.
