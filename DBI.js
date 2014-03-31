@@ -1,7 +1,7 @@
 function DBI(DBIjson){
 	var that = this;
 
-	var scopeOfDesire = window;
+	var desireContext = window;
 
 	var desires = DBIjson["desires"];
 
@@ -25,7 +25,7 @@ function DBI(DBIjson){
 
 		if(typeof obj == "string"){
 			console.log("string");
-			obj = scopeOfDesire[obj];
+			obj = desireContext[obj];
 		}
 
 		var pref = config.preference || 1,
@@ -127,7 +127,7 @@ function DBI(DBIjson){
 		return desires;
 	}
 
-	this.changeDesireScope = function(scope){
-		scopeOfDesire = scope;
+	this.changeDesireContext = function(ctx){
+		desireContext = ctx;
 	}
 }

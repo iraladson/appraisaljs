@@ -1,4 +1,5 @@
-#Desires/Beliefs/Intentions
+Desires/Beliefs/Intentions (DBI)
+================================
 
 ```json
 {	
@@ -52,12 +53,12 @@
 }
 ```
 
-##Desires
 
-Desires refer to the aims and goals of the agent. Goals must be able to be quantifiable. 
-The success or failure of a goal depends on if some value is changing according to the 
-specified preference.
+#Desires
 
+Desires refer to the aims and goals of the agent. Goals must be able to be quantifiable. The success or failure of a goal depends on if some value is changing according to the specified ```preference```.
+
+Represented as JSON
 ```json
 {
 	"id" : 0,
@@ -81,8 +82,7 @@ specified preference.
 ```id``` is an integer that represents when it was pushed into the desires array. Automatically
 incremented.
 
-```object``` is a string reference to the object that contains the value to be measure. By 
-default, the object is aquired from the global scope like so: ```currentScope["refString"]```. 
+As JSON, ```object``` is a string reference to the object that contains the ```value``` to be measure. As Javascript, it is an object that contains ```value```. When specified as a String, the object will be aquired from the current context i.e. => ```window["referenceString"]```. By default, the context is set to ```window```. To change this, call ```changeDesireContext(newContext)```. This is useful if the desired object is buried inside of other objects.
 
 ```value```  is a string reference to the property or method that will return the value. This value will  be used to determine the success or failure of a goal. The return type of the property/method must be a number.
 
@@ -101,19 +101,17 @@ Desires are stored as objects inside an array called ```desires```. There are th
 that allow the ```desires``` array to be modified.
 
 ```javascript
-	var model = new emoChatter.DBI(DBIjson);
+	var model = new emotionalAppraisal.DBI(DBIjson);
 
-	model.newDesire({		//function 1
-		object : "string",		//@default: "error->desire must have specified object(string)"
+	model.newDesire({	
+		object : "string",		//string or object
 		value : "string",		//@default: "error->desire must have specified value(string)""
 		preference : 1,			//@default: 1
 		persistant : false,		//@default: false
 		magnitude : 0.2 		//@default: 0.2
-		id : "0",				//@default: automatic increment "0","1"..."x"
 	}); 
 
-	//a variable of the object can also be passed
-	model.newDesire({object : objVariable, value : "valString"})
+	
 
 	model.removeDesire({	//function 2
 		id : 0,				//Removes desires from the array that match specified params
@@ -126,15 +124,15 @@ that allow the ```desires``` array to be modified.
 
 	model.updateDesires(potentialDesires,config,checkFunction); //function 3
 ```
-METHOD 3
-========
-This function can be called everytime the agent's relationship to it's environment
-changes. In the case of a chatbot, for instance, this moment would be after every update
-in the chatlog.
+```updateDesires``` should be called every time the agent's relationship to it's environment
+changes. For example, in the case of a chatbot, this would be called after the chatlog changes.
+1.```potentialDesires``` is an array of objects that represent all of the object that could potentially become new desires. The construction of this array is left to the user.
 
-The function looks at each object in the ```potentialDesires``` array and uses the ```checkFunction``` to see if it should be a new desire. If ```checkFunction(potentialDesires[i])``` returns a truthy value, then ```PotentialDesires[i]``` is pushed into the ```desires``` array. 
+2.```config``` is an object that represents configuration details. It is just like the parameter of ```newDesire```, except if ```object``` is set to the string ```"_SELF"``` the object property will automatically be set to ```potentialDesires[i]```. 
 
-```config``` is an object that specifies the properites of the new desires. Just like the object passed into ```newDesire```, except
+3. ```checkFunction``` will take each ```potentialDesires[i]``` as a parameter and return a boolean value. If true, then the desire will get pushed into the ```desires``` array.
+
+
 
 As an example, say you wanted a chatbot to "desire" words that have a positive sentiment.
 ```javascript
