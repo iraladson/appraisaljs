@@ -60,7 +60,7 @@ EMOAPP.Intention = function(){
 		var _self = type || true;
 		
 		if(typeof _self == "string"){
-			var sent = new IntentSentence(sentence.trim());
+			var sent = new IntentSentence(type.trim());
 			return new IntentStruct(currentId,sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper());
 		}
 		
@@ -137,9 +137,9 @@ EMOAPP.Intention = function(){
 				}
 
 				if(word.indexOf("?") != -1){
-					confidence.yn += .45; 
-					confidence.alt += .45;
-					confidence.open += .45; 
+					confidence.yn *= 1.45; 
+					confidence.alt *= 1.45;
+					confidence.open *= 1.45; 
 				}
 
 			}
