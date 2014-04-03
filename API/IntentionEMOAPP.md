@@ -9,6 +9,7 @@ This module can help determine the intentions of a sentence.
 `self` is a boolean. Set to `true`, it means the sentence is the agent's intention. Deafaults to `true`.
 
 The function looks at ```sentence``` and creates an intentionObject. It returns the array that contains all intentionObjects that have been created. Each intentionObject has five properties.
+
 1. `id` is an id. Automatically incremented as more intentions are logged.
 2. `isQuestYN` is a float that represents confidence that sentence is expecting a yes or no answer.
 3. `isQuestAlt` => confidence that the sentence is looking for a choice between alternate responses.
