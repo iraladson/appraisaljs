@@ -265,4 +265,32 @@ It is, however, suggested that you create a custom parsing method and populate t
 1. The ambiguity of conversation and it's reliance on contextual information (which the api does not store) will limit the performance of the parser. 
 2. The strings that are stored in each belief are the same strings returned to you. You can use them as identifiers to find the objects they reference.
 
- 
+
+
+#Intentions
+
+Intentions are representations of the aim of the most recent sentence.
+
+As JSON
+```json
+	{
+		self : [{
+			id
+			wasQuestion
+			wasDeclar
+			wasImper
+			}],
+		other :[{
+			id
+			wasQuestion
+			wasDeclar
+			wasImper
+		}]
+	}
+```
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+<script src="lexicon.js_"></script>
+<script src="lexer.js"></script>
+<script src="POSTagger.js"></script>
+<script src="EMOAPP.js"></script>
+<script src="IntentionEMOAPP.js"></script>
+<script>
+
+function test(){
+	var intent = new EMOAPP.Intention()
+	var model = new EMOAPP();
+
+	model.addComponent(intent);
+
+	model.populateAEMS([{id:"Intention", sentence:"Go to the store", subject:true}])
+
+	model.updateFactors();
+}
+</script>
