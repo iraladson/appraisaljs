@@ -1,81 +1,73 @@
 EMOAPP.Intention = function(){
+	var id = "Intention"
+	var that = this;
 
-	var util = new EMOAPP().Util;
-	var PosSentence = new util().PosSentence;
+	//grab utlities
+	var util = new EMOAPP.Util();
+	var PosSentence = util.PosSentence;
 
-	var IntentStruct = function(id,s,q,d,i,bool){
+	//grab dependent components
+	var componentLinks = [];
+	var dependentComponents = [""];
+	
+	this.linkComponent = function(compo){
+		componentLinks.push(compo)
+	}
 
-		this.id = id;
+	this.getDependents = function(){
+		return dependentComponents;
+	}
+
+	//history
+	var log = [];
+
+	//most recent intentions
+	var self;
+	var other;
+
+	//private constructors
+	//Internal Representation on an Intention
+	var IntentStruct = function(s,q,d,i,bool){
 
 		this.string = s;
 
-		this.wasQuestYN = q.yn;
-		
-		this.wasQuestAlt = q.alt;
-		
-		this.wasQuestOpen = q.open;
+		this.values = {
+			isQuestYN  : q.yn,
 
-		this.wasDeclar = d;
-
-		this.wasImper = i;
+			isQuestAlt : q.alt,
+			
+			isQuestOpen : q.open,
+			
+			isImper : i,
+			
+			isDeclar : d
+		};
 
 		this.own = bool;
 	}
 
-	var id = "Intention";
+	
 
-
-	var log = [];
-	var currentId = 0;
-	var self;
-	var other;
-
-	this.getId = function(){
-		return id;
-	}
-
+	//create new intentions
 	this.newIntention = function(sentence,selfBool){
+
 		var sent = new IntentSentence(sentence.trim());
 		var _self = selfBool || true;
-		console.log("Intent sentence made")
 		if(_self){
-			self = new IntentStruct(currentId,sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper(),true);
+			self = new IntentStruct(sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper(),true);
 
-			log.push(new IntentStruct(currentId,sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper(),true));
+			log.push(new IntentStruct(sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper(),true));
 		} else {
-			other = new IntentStruct(currentId,sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper(),false);
+			other = new IntentStruct(sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper(),false);
 
-			log.push(new IntentStruct(currentId,sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper()),false);
+			log.push(new IntentStruct(sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper()),false);
 		}
-		console.log(log);		
-
 		return log;	
 	}
 
-	this.getLog = function(){
-		return log;
-	}
-	
-	this.getIntent = function(type){
-		var _self = type || true;
-		
-		if(typeof _self == "string"){
-			var sent = new IntentSentence(type.trim());
-			return new IntentStruct(currentId,sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper());
-		}
-		
-		if(_self) return self;
-
-		return other;
-		
-	}
-
-
-	function IntentSentence(sentence){
+	var IntentSentence = function(sentence){
 		var sent = sentence.split(" ");
 		var posSent = new PosSentence(sentence).specialSentence;
-
-
 		var verbFound = false;
 
 		for(var i = 0; i < posSent.length; i+=1){
@@ -91,7 +83,6 @@ EMOAPP.Intention = function(){
 		this.string = sentence;
 
 		this.isQuestion = function(){
-
 			var confidence = { yn : 0, alt : 0, open : 0 };
 
 			for(var i = 0; i < sent.length; i++){
@@ -137,19 +128,13 @@ EMOAPP.Intention = function(){
 				}
 
 				if(word.indexOf("?") != -1){
-					confidence.yn *= 1.45; 
-					confidence.alt *= 1.45;
-					confidence.open *= 1.45; 
+					confidence.yn += .45; 
+					confidence.alt += .45;
+					confidence.open += .45; 
 				}
-
 			}
 
-	//		for(ele in confidence){
-	//			if(confidence[ele] >= threshold){
-					return confidence;
-	//			}
-	//			return undefined;
-	//		}
+			return confidence;
 		}
 
 		this.isDeclar = function(){
@@ -159,7 +144,7 @@ EMOAPP.Intention = function(){
 				confidence += .4;
 			}
 
-			if(posSent[posSent.length-1] == "."){
+			if(posSent[posSent.length-1].word == "."){
 				confidence += .2;
 			}
 
@@ -173,7 +158,7 @@ EMOAPP.Intention = function(){
 				confidence += .4;
 			}
 
-			if(posSent[posSent.length-1] == "."){
+			if(posSent[posSent.length-1].word == "."){
 				confidence += .2;
 			}
 
@@ -181,32 +166,70 @@ EMOAPP.Intention = function(){
 		}
 	}
 
+	//EMOAPPS requires
 	this.update = function(obj){
 		return this.newIntention(obj.sentence, obj.self);
 	}
 	
 
-	//AEM
-	this.AEM = function(){
-		//var that = this;
-		var id = "Intention";
+	this.getAppraisalVariables = function(){
+		if(!self && !other) 
+			return []
 
-		this.string = "";
-		this.self = true;
-
-		this.populate = function(obj){
-			this.string = obj.sentence;
-			this.self = obj.self || true;
+		//was a question asked
+		var mod1 = {};
+		var lastIntentOther = that.getIntent(false);
+		var judgementOther = util.largestValueInObject(lastIntentOther.values);
+		if((judgementOther.key == "isQuestOpen") || (judgementOther.key == "isQuestAlt") || (judgementOther.key == "isQuestYN")){
+			mod1.id = "happiness";
+			mod1.val = 0.5;
+			mod1.rep = lastIntentOther.string;
 		}
 
-		this.deliver = function(){
-			return { sentence : this.string, self : this.self }
+		//was a question asked after your question
+		var mod2 = {};
+		var lastIntentSelf = that.getIntent();
+		var judgementSelf = util.largestValueInObject(lastIntentSelf.values);
+		if((judgementSelf.key == "isQuestOpen") || (judgementSelf.key == "isQuestAlt") || (judgementSelf.key == "isQuestYN")){
+			if(judgementOther.key == "isQuestYN"){
+				mod2.id = "anger";
+				mod2.val = 0.8;
+				mod2.rep = "Responded to question with question"
+			} else if(judgementOther.key == "isQuestAlt"){
+				mod2.id = "anger"
+				mod2.val = 0.5;
+				mod2.rep = "Responded to question with question"
+			} else if(judgementOther.key == "isQuestAlt"){
+				mod2.id = "surprise";
+				mod2.val = 0.6;
+				mod2.rep = lastIntentOther.string
+			}
 		}
 
-		this.getId = function(){
-			return id;
-		}
+		return [mod1,mod2];
 	}
 
+	//get
+	this.getId = function(){
+		return id;
+	}
+
+	this.getLog = function(){
+		return log;
+	}
+	
+	this.getIntent = function(type){
+		var _self = type || true;
+		
+		if(typeof _self == "string"){
+			var sent = new IntentSentence(sentence.trim());
+			return new IntentStruct(currentId,sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper());
+		}
+		
+		if(_self) return self;
+
+		return other;
+		
+	}
 
 }

@@ -4,24 +4,35 @@
 <script src="EMOAPP.js"></script>
 <script src="IntentionEMOAPP.js"></script>
 <script src="BeliefEMOAPP.js"></script>
+<script src="DesireEMOAPP.js"></script>
 <script type="text/javascript">
-function test(){
+//function test(){
 	var model = new EMOAPP.Core()
 	var belief = new EMOAPP.Belief();
 	var intent = new EMOAPP.Intention();
+	var desire = new EMOAPP.WilliamDesire();
 
 	model.addComponent(intent);
 	model.addComponent(belief);
+	model.addComponent(desire);
 	model.linkComponents();
 
 	var obj = {};
-	obj.sentence = "The big sky is very blue.";
+	obj.sentence = "Throwup is gross.";
 	obj.sentiment = 0.2;
 	belief.update(obj);
 	intent.update(obj);
-	console.log(model.process());
+	desire.update();
 
-}
+	var obj = {};
+	obj.sentence = "Throwup is bad.";
+	obj.sentiment = 0.2;
+	belief.update(obj);
+	//intent.update(obj);
+	desire.update();
+	//console.log(model.process());
+
+//}
 
 function getSentiment(sentence){
 

@@ -1,9 +1,22 @@
 EMOAPP.Intention = function(){
+	var id = "Intention"
 	var that = this;
 
 	//grab utlities
 	var util = new EMOAPP.Util();
-	var PosSentence = util.PosSentence
+	var PosSentence = util.PosSentence;
+
+	//grab dependent components
+	var componentLinks = {};
+	var dependentComponents = [""];
+	
+	this.linkComponent = function(id,compo){
+		componentLinks[id] = compo;
+	}
+
+	this.getDependents = function(){
+		return dependentComponents;
+	}
 
 	//history
 	var log = [];
@@ -209,8 +222,8 @@ EMOAPP.Intention = function(){
 		var _self = type || true;
 		
 		if(typeof _self == "string"){
-			var sent = new IntentSentence(sentence.trim());
-			return new IntentStruct(currentId,sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper());
+			var sent = new IntentSentence(_self.trim());
+			return new IntentStruct(sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper());
 		}
 		
 		if(_self) return self;
