@@ -43,13 +43,6 @@ EMOAPP.WilliamDesire = function(){
 
 		for (var i = 0; i < trigger.length; i++) {
 			var t = trigger[i];
-
-			if(assertion.indexOf(t) != -1){
-				console.log(assertion);
-				console.log(t);
-				console.log(trigger);
-				return true
-			}
 		};
 	}
 
@@ -72,7 +65,7 @@ EMOAPP.WilliamDesire = function(){
 
 	var DesireStruct = function(obj){
 		var that = this;
-		this.context = obj.context;
+		this.context = obj.context || ctx;
 		this.value = obj.value;
 		this.lastValue = obj.value;
 		this.valueIsMethod = obj.valueIsMethod || true;
@@ -80,13 +73,36 @@ EMOAPP.WilliamDesire = function(){
 		this.hasGoal = obj.hasGoal || false;
 		this.goal = obj.goal || null;
 		this.direction = obj.direction || null;
+		this.magnitude = obj.magnitude || 0.2;
+		this.mutable = obj.mutable || true;
 		this.getValue = function(){
 			if(that.valueIsMethod){
 				return that.value(that.param)
-			} else {}
+			} else {
 				return that.value
 			}
 		}
+
+		this.modifyMagnitude = function(amount){
+			if(that.mutable){
+				var change = that.magnitude * amount;
+				that.magnitude += change;
+			}
+		}
+	}
+
+	this.getDesires = function(){
+		return desires;
+	}
+
+	this.getDesireByParam = function(param){
+		for (var i = 0; i < desires.length; i++) {
+			var desire = desires[i];
+
+			if(desire.param.trim().toLowerCase() == param.trim().toLowerCase()){
+				return desire
+			}
+		};
 	}
 
 	this.newDesire = function(obj){
@@ -94,19 +110,21 @@ EMOAPP.WilliamDesire = function(){
 	}
 
 	this.update = function(){
+
+
 		/*/update lastValue of each desire
 		for(var i = 0; i < desires.length; i += 1){
 			var desire = desires[i];
 
 			desire.value = (desire.valueIsMethod ? desire.context.value(desire.param) : desire.context.value)
 		}*/
-
 		//add new desires based on beleifs
 		//for every belief in generalBeliefs
 		for (var i = 0; i < componentLinks["Belief"].getBeliefs().general.length; i++) {
+
 			var belief = componentLinks["Belief"].getBeliefs().general[i];
+
 			//if belief.affirmative is true
-			console.log(isDesire(belief.subject))
 			if((belief.affirmative) && !(isDesire(belief.subject))){
 				//if belief.assertion contains a desireTigger
 				if(isTrigger(belief.assertion, true)){
@@ -136,9 +154,9 @@ EMOAPP.WilliamDesire = function(){
 					};
 
 					that.newDesire(dObj);
-					
-					//create new Desire to be close to belief.subject
-					//!!!NEED TO DO!!!
+				
+				//create new Desire to be close to belief.subject
+				//!!!NEED TO DO!!!
 				}
 			}
 		}
@@ -203,8 +221,9 @@ EMOAPP.WilliamDesire = function(){
 				}
 				modification.push(mod);
 			}
-
-		};
+		}
+		console.log("~~~Desire~~~")
+		console.log(desires);
 		return modification;
 	}
 }

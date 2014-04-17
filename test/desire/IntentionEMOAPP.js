@@ -176,37 +176,50 @@ EMOAPP.Intention = function(){
 		if(!self && !other) 
 			return []
 
+		var modification = [];
+
 		//was a question asked
 		var mod1 = {};
 		var lastIntentOther = that.getIntent(false);
 		var judgementOther = util.largestValueInObject(lastIntentOther.values);
 		if((judgementOther.key == "isQuestOpen") || (judgementOther.key == "isQuestAlt") || (judgementOther.key == "isQuestYN")){
 			mod1.id = "happiness";
-			mod1.val = 0.5;
-			mod1.rep = lastIntentOther.string;
+			mod1.val = 0.3;
+			mod1.rep = "I was asked a question";
+			modification.push(mod1);
 		}
 
 		//was a question asked after your question
 		var mod2 = {};
+			mod2.rep = "My question was responded to with a question"
+
 		var lastIntentSelf = that.getIntent();
 		var judgementSelf = util.largestValueInObject(lastIntentSelf.values);
+
 		if((judgementSelf.key == "isQuestOpen") || (judgementSelf.key == "isQuestAlt") || (judgementSelf.key == "isQuestYN")){
 			if(judgementOther.key == "isQuestYN"){
 				mod2.id = "anger";
 				mod2.val = 0.8;
-				mod2.rep = "Responded to question with question"
+				modification.push(mod2);
 			} else if(judgementOther.key == "isQuestAlt"){
 				mod2.id = "anger"
 				mod2.val = 0.5;
-				mod2.rep = "Responded to question with question"
-			} else if(judgementOther.key == "isQuestAlt"){
-				mod2.id = "surprise";
-				mod2.val = 0.6;
-				mod2.rep = lastIntentOther.string
+				modification.push(mod2);
+			} else if(judgementOther.key == "isQuestOpen"){
+				mod2.id = "anger";
+				mod2.val = 0.4;
+				modification.push(mod2);
+				modification.push({
+					id : "surprise",
+					val : 0.3,
+					rep : "This question may be a response to my question"
+				})
 			}
 		}
 
-		return [mod1,mod2];
+		console.log("~~~Intentions~~~")
+		console.log(log);
+		return modification;
 	}
 
 	//get

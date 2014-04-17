@@ -121,7 +121,6 @@ EMOAPP.Util = function() {
 					}
 				}
 			})();
-
 			return { s : subject, v : verb, o : object };
 		}
 
@@ -228,6 +227,7 @@ EMOAPP.Core = function(){
 
         console.log("~~Affect~~");
         console.log(affect);
+        console.log("");
 
 		return affect
 	}

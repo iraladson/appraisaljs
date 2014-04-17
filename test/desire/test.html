@@ -6,7 +6,8 @@
 <script src="BeliefEMOAPP.js"></script>
 <script src="DesireEMOAPP.js"></script>
 <script type="text/javascript">
-//function test(){
+function test(){
+	var that = this;
 	var model = new EMOAPP.Core()
 	var belief = new EMOAPP.Belief();
 	var intent = new EMOAPP.Intention();
@@ -17,22 +18,54 @@
 	model.addComponent(desire);
 	model.linkComponents();
 
-	var obj = {};
-	obj.sentence = "Throwup is gross.";
-	obj.sentiment = 0.2;
-	belief.update(obj);
-	intent.update(obj);
-	desire.update();
+	updater = function(sentence,sentiment,self,modules){
+		var obj = {};
+		obj.sentence = sentence;
+		obj.sentiment = sentiment;
+		obj.self = self;
 
-	var obj = {};
-	obj.sentence = "Throwup is bad.";
-	obj.sentiment = 0.2;
-	belief.update(obj);
-	//intent.update(obj);
-	desire.update();
-	//console.log(model.process());
+		for(var i = 0; i < modules.length; i += 1){
+			//console.log(modules[i].getId());
+			modules[i].update(obj)
+		}
+	}
+/*
+	console.log("~~|||Greeting|||~~~");
+	updater("Hi",0.1,true,[intent]);
+	updater("Hey!",0.1,false,[belief,intent,desire]);
+	model.process();
 
-//}
+	console.log("~~|||Question On Question|||~~~");
+	updater("Is the sky blue?",0.1,true,[intent]);
+	updater("What is your mother's name?",0.1,false,[belief,intent,desire]);
+	console.log(model.process());
+
+	console.log("~~|||Mean|||~~~");
+	updater("I like flowers.",0.1,true,[intent]);
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "flowers",
+		direction : 1
+	});
+	updater("Flowers are bad!",-0.7,false,[belief,intent,desire]);
+	console.log(model.process());
+
+	return belief.getBeliefs();
+
+	console.log("~~|||Nice|||~~~");
+	updater("How do I look?",0.1,true,[intent]);
+	updater("You are very pretty",0.6,false,[belief,intent,desire]);
+	console.log(model.process());
+*/
+	console.log("~~|||Factoid|||~~~");
+	updater("What is water?",0.1,true,[intent]);
+	updater("It's a liquid that's found everywhere",0.1,false,[belief,intent,desire]);
+	console.log(model.process());
+
+}
 
 function getSentiment(sentence){
 
