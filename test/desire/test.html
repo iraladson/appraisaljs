@@ -1,3 +1,6 @@
+<!DOCTYPE HTML>
+<html>
+<head>
 <script src="lexicon.js_"></script>
 <script src="lexer.js"></script>
 <script src="POSTagger.js"></script>
@@ -6,8 +9,7 @@
 <script src="BeliefEMOAPP.js"></script>
 <script src="DesireEMOAPP.js"></script>
 <script type="text/javascript">
-function test(){
-	var that = this;
+ 	var that = this;
 	var model = new EMOAPP.Core()
 	var belief = new EMOAPP.Belief();
 	var intent = new EMOAPP.Intention();
@@ -18,17 +20,48 @@ function test(){
 	model.addComponent(desire);
 	model.linkComponents();
 
-	updater = function(sentence,sentiment,self,modules){
+	function updater(sentence,sentiment,self,modules){
 		var obj = {};
 		obj.sentence = sentence;
 		obj.sentiment = sentiment;
 		obj.self = self;
+		console.log(modules);
 
 		for(var i = 0; i < modules.length; i += 1){
 			//console.log(modules[i].getId());
+			console.log(modules[i])
 			modules[i].update(obj)
 		}
 	}
+</script>
+</head>
+<body>	
+	<div id='chatArea' style='border:1px solid #aaa; width:500px; height:400px; overflow:auto;'></div>  
+	<form>
+ 	  <textarea id = "answer" placeholder="Some text in this box." rows="2" cols="50"></textarea>
+      <br>
+      <left><a onClick = "sendText()" href="javascript:void(0);" title="Answer">Submit</a></left>               
+    </form>
+</body>
+<script>  
+	function sendText(){
+	var input = document.getElementById('answer');
+	var text = input.value;
+	//console.log(text);
+	updater(text,getSentiment(text),false,[intent,belief,desire])
+	var affect = model.process();
+	console.log(affect);
+	//updater("",0,true,[intent])
+}
+   </script>
+</html>
+
+
+<script type="text/javascript">
+function test(){
+	
+
+	
 /*
 	console.log("~~|||Greeting|||~~~");
 	updater("Hi",0.1,true,[intent]);
@@ -59,6 +92,8 @@ function test(){
 	updater("How do I look?",0.1,true,[intent]);
 	updater("You are very pretty",0.6,false,[belief,intent,desire]);
 	console.log(model.process());
+	var x = model.process()
+	x.mood = [x,y]
 */
 	console.log("~~|||Factoid|||~~~");
 	updater("What is water?",0.1,true,[intent]);
