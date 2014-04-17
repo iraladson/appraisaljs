@@ -25,14 +25,112 @@
 		obj.sentence = sentence;
 		obj.sentiment = sentiment;
 		obj.self = self;
-		console.log(modules);
 
 		for(var i = 0; i < modules.length; i += 1){
 			//console.log(modules[i].getId());
-			console.log(modules[i])
 			modules[i].update(obj)
 		}
 	}
+
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "flowers",
+		direction : 1,
+		mutable : false,
+		magnitude : 0.8
+	});
+
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "spring",
+		direction : 1,
+		mutable : false,
+		magnitude : 0.8
+	});
+
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "flower",
+		direction : 1,
+		mutable : false,
+		magnitude : 0.8
+	});
+
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "nature",
+		direction : 1,
+		mutable : false,
+		magnitude : 0.8
+	});
+
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "grow",
+		direction : 1,
+		mutable : false,
+		magnitude : 0.8
+	});
+
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "trees",
+		direction : 1,
+		mutable : false,
+		magnitude : 0.8
+	});
+
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "grass",
+		direction : 1,
+		mutable : false,
+		magnitude : 0.8
+	});
+
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "bees",
+		direction : 1,
+		mutable : false,
+		magnitude : 0.8
+	});
+
+	desire.newDesire({
+		context : that,
+		value : function(){return},
+		lastValue : 0,
+		valueIsMethod : false,
+		param : "bee",
+		direction : 1,
+		mutable : false,
+		magnitude : 0.8
+	});
+
 </script>
 </head>
 <body>	
@@ -47,7 +145,8 @@
 	function sendText(){
 	var input = document.getElementById('answer');
 	var text = input.value;
-	//console.log(text);
+	console.log(getSentiment(text));
+	updater("hi",0,true,[intent])
 	updater(text,getSentiment(text),false,[intent,belief,desire])
 	var affect = model.process();
 	console.log(affect);
