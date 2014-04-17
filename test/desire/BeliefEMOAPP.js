@@ -172,6 +172,7 @@ EMOAPP.Belief = function(){
 
 			if(desiredSubject){
 				if(desiredSubject.direction == 1){ // if desire is positive
+					console.log(recentBelief.sentiment);
 					if(recentBelief.sentiment > 0.2){ //and belief was positive
 						//create happiness
 						modification.push({

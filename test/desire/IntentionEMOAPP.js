@@ -9,7 +9,7 @@ EMOAPP.Intention = function(){
 	//grab dependent components
 	var componentLinks = {};
 	var dependentComponents = [""];
-	
+
 	this.linkComponent = function(id,compo){
 		componentLinks[id] = compo;
 	}
@@ -35,24 +35,25 @@ EMOAPP.Intention = function(){
 			isQuestYN  : q.yn,
 
 			isQuestAlt : q.alt,
-			
+
 			isQuestOpen : q.open,
-			
+
 			isImper : i,
-			
+
 			isDeclar : d
 		};
 
 		this.own = bool;
 	}
 
-	
+
 
 	//create new intentions
 	this.newIntention = function(sentence,selfBool){
 
 		var sent = new IntentSentence(sentence.trim());
-		var _self = selfBool || true;
+		var _self = selfBool;
+		
 		if(_self){
 			self = new IntentStruct(sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper(),true);
 
@@ -87,12 +88,12 @@ EMOAPP.Intention = function(){
 
 			for(var i = 0; i < sent.length; i++){
 				var word = sent[i].toLowerCase();
-				
+
 				if(word == "or" || word == "and"){
 					confidence.alt += 0.15;
 				}
 
-				
+
 				if((word == "can") ||
 					(word == "did") ||
 					(word == "are") ||
@@ -170,7 +171,7 @@ EMOAPP.Intention = function(){
 	this.update = function(obj){
 		return this.newIntention(obj.sentence, obj.self);
 	}
-	
+
 
 	this.getAppraisalVariables = function(){
 		if(!self && !other) 
@@ -195,7 +196,7 @@ EMOAPP.Intention = function(){
 
 		var lastIntentSelf = that.getIntent();
 		var judgementSelf = util.largestValueInObject(lastIntentSelf.values);
-
+		
 		if((judgementSelf.key == "isQuestOpen") || (judgementSelf.key == "isQuestAlt") || (judgementSelf.key == "isQuestYN")){
 			if(judgementOther.key == "isQuestYN"){
 				mod2.id = "anger";
@@ -230,19 +231,19 @@ EMOAPP.Intention = function(){
 	this.getLog = function(){
 		return log;
 	}
-	
+
 	this.getIntent = function(type){
 		var _self = type || true;
-		
+
 		if(typeof _self == "string"){
 			var sent = new IntentSentence(_self.trim());
 			return new IntentStruct(sent.string,sent.isQuestion(),sent.isDeclar(),sent.isImper());
 		}
-		
+
 		if(_self) return self;
 
 		return other;
-		
+
 	}
 
 }
